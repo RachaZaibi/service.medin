@@ -1,0 +1,24 @@
+# CodeIgniter
+/application/cache/*
+!/application/cache/index.html
+/application/logs/*
+!/application/logs/index.html
+
+# Composer
+/vendor/
+
+# Node
+/node_modules/
+
+# Environment
+.env
+
+# IDEs
+.idea/
+*.sublime-project
+*.sublime-workspace
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
