@@ -59,7 +59,7 @@
 
           <div id="header-nav" class="collapse navbar-collapse justify-content-end">
             <ul class="navbar-nav">
-                <li><a target="_blank" href="https://service.medin.tn">Visit services FMM </a></li>
+                <li><a target="_blank" href="http://localhost:8085">Visit services FMM </a></li>
                 <li><a target="_blank" href="https://">Support</a></li>
               </ul>
             </div>
@@ -133,7 +133,7 @@
                  </div>
                   <div class="col-sm-6 col-lg-4">
                     <ul class="list-unstyled">
-                     <li><strong>Author:</strong> <a href="https://service.medin.tn" target="_blank">Codericks</a></li>
+                     <li><strong>Author:</strong> <a href="http://localhost:8085" target="_blank">Codericks</a></li>
                    </ul>
                   </div>
               </div>

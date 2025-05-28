@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./docker
+    ports:
+      - "8085:80"  # Web access at http://localhost:8085
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: admin_prestation1
+      MYSQL_USER: admin_prestation1
+      MYSQL_PASSWORD: admin_prestation.23$
+    ports:
+      - "33065:3306"  # MySQL accessible at localhost:33065
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/db-init:/docker-entrypoint-initdb.d
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "8086:80"  # Access phpMyAdmin at http://localhost:8086
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root
+    depends_on:
+      - db
+
+volumes:
+  db_data:
