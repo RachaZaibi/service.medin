@@ -40,6 +40,8 @@
                                     <th scope="col"><?php echo trans('customer') ?></th>
                                     <th scope="col"><?php echo trans('date') ?></th>
                                     <th scope="col"><?php echo trans('status') ?></th>
+                                    <th scope="col"><?php echo trans('description') ?></th>
+                                    <th scope="col"><?php echo trans('file') ?></th>
                                     <th scope="col"><?php echo trans('payment') ?></th>
                                     <th scope="col"><?php echo trans('action') ?></th>
                                 </tr>
@@ -124,6 +126,46 @@
                                             <?php elseif ($appointment->status == 3): ?>
                                                 <span><i class="far fa-circle text-primary fs-14"></i> <?php echo trans('completed') ?></span>
                                             <?php endif ?>
+                                        </td>
+                                        <td>
+                                            <!-- Description -->
+                                            <?php if (!empty($appointment->description)): ?>
+                                                <a href="#" data-toggle="modal" data-target="#descModal_<?php echo $appointment->id; ?>">View</a>
+                                                <div class="modal fade" id="descModal_<?php echo $appointment->id; ?>" tabindex="-1" role="dialog" aria-labelledby="descModalLabel_<?php echo $appointment->id; ?>" aria-hidden="true" data-backdrop="false">
+                                                    <div class="modal-dialog modal-lg" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title text-dark" id="descModalLabel_<?php echo $appointment->id; ?>">
+                                                                    <?php echo trans('description'); ?>
+                                                                </h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <pre style="white-space: pre-wrap; word-break: break-word;">
+                                                                    <?php echo nl2br(html_escape($appointment->description)); ?>
+                                                                </pre>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+                                            <!-- End Description -->
+                                        </td>
+                                        <td>
+                                            <!-- File -->
+                                            <?php if (!empty($appointment->file)): ?>
+                                                <?php if (file_exists($appointment->file)): ?>
+                                                    <a href="<?php echo base_url($appointment->file); ?>" target="_blank" class="link">
+                                                        <i class="fas fa-file"></i> View File
+                                                    </a>
+                                                <?php else: ?>
+                                                    <span class="text-danger link">File not found</span>
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <span class="text-muted link">No file</span>
+                                            <?php endif; ?>
                                         </td>
                                         <td>
                                             <?php $check_payment = check_appointment_payment($appointment->id) ?>

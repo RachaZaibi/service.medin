@@ -64,7 +64,7 @@ class Appointment extends Home_Controller {
         }
         if ($page != 0) {
             $page = $page - 1;
-        }
+        } 
 
         $data['appointments'] = $this->admin_model->get_appointments(user()->id, 0 , $config['per_page'], $page * $config['per_page']);
         $data['services'] = $this->admin_model->select_by_user('services');

@@ -32435,11 +32435,13 @@ a.nav-link.user-log {
 .full-sub-table {
     background: rgba(40,110,251,.1);
     padding: 24px 110px;
+    align-items: center;
 }
 .full-sub-table .info-wrapper {
     display: inline-block;
     margin: 0;
-    width: 30%;
+    padding: 0 2%;
+    width: auto;
     font-size: 14px;
 }
 .full-sub-table .info-wrapper dt {
@@ -32454,6 +32456,18 @@ a.nav-link.user-log {
     background: #007bff
 }
 
+tr.active .link {
+    color: #fff !important;
+    background: #007bff !important;
+}
+tr.active span.link.text-muted {
+    color: #fff !important;
+    background: #007bff !important;
+}
+tr.active span.link.text-danger {
+    color: #fff !important;
+    background: #007bff !important;
+}
 .default.active:hover {
     color: #fff;
     background: #007bff

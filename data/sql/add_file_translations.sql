@@ -1,0 +1,16 @@
+INSERT IGNORE INTO lang_values (type, label, keyword, english) VALUES
+('user', 'File', 'file', 'File'),
+('user', 'Files', 'files', 'Files'),
+('user', 'File name', 'file-name', 'File name'),
+('user', 'File size', 'file-size', 'File size'),
+('user', 'File type', 'file-type', 'File type'),
+('user', 'Upload file', 'upload-file', 'Upload file'),
+('user', 'Download file', 'download-file', 'Download file'),
+('user', 'Delete file', 'delete-file', 'Delete file'),
+('user', 'Are you sure you want to delete this file?', 'are-you-sure-you-want-to-delete-this-file?', 'Are you sure you want to delete this file?'),
+('user', 'File uploaded successfully', 'file-uploaded-successfully', 'File uploaded successfully'),
+('user', 'File deleted successfully', 'file-deleted-successfully', 'File deleted successfully'),
+('user', 'File upload failed', 'file-upload-failed', 'File upload failed'),
+('user', 'File deletion failed', 'file-deletion-failed', 'File deletion failed'),
+('user', 'No files found', 'no-files-found', 'No files found'),
+('user', 'Select file to upload', 'select-file-to-upload', 'Select file to upload');

@@ -273,7 +273,7 @@
                   <?php if (isset($page_title) && $page_title == "Edit"): ?>
                     <h3 class="card-title pt-2">Edit <a href="<?php echo base_url('admin/pages') ?>" class="pull-right btn btn-secondary btn-sm"><i class="fa fa-angle-left"></i> <?php echo trans('back') ?></a></h3>
                   <?php else: ?>
-                    <h3 class="card-title pt-2"><?php echo trans('appointments') ?></h3>
+                    <h3 class="card-title pt-2"><?php echo trans('appointments') ?></h3> 
                   <?php endif; ?>
 
                   <div class="card-tools pull-right d-flex justify-content-between">
@@ -387,6 +387,8 @@
                                 <th><?php echo trans('staff') ?></th>
                                 <th><?php echo trans('payment') ?></th>
                                 <th><?php echo trans('status') ?></th>
+                                <th><?php echo trans('description') ?></th>
+                                <th><?php echo trans('file') ?></th>
                                 <th><?php echo trans('action') ?></th>
                                 <th></th>
                             </tr>
@@ -498,8 +500,47 @@
                                           <option value="3" <?php if ($appointment->status == 3){echo "selected";} ?>> <?php echo trans('completed') ?></option>
                                         </select>
                                     </td>
-                                    
                                     <td>
+                                        <!-- Display description -->
+                                        <?php if (!empty($appointment->description)): ?>
+                                            <div class="mb-1">
+                                              <a  href="#" data-toggle="modal" data-target="#descModal_<?php echo $appointment->id; ?>" class="mb-1 link">
+                                                  View
+                                              </a>
+                                               
+                                            </div>
+                                            <!-- Description Modal -->
+                                            <div class="modal fade" id="descModal_<?php echo $appointment->id; ?>" tabindex="-1" role="dialog" aria-labelledby="descModalLabel_<?php echo $appointment->id; ?>" aria-hidden="true">
+                                              <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                  <div class="modal-header">
+                                                    <h5 class="modal-title text-dark" id="descModalLabel_<?php echo $appointment->id; ?>"><?php echo trans('description') ?></h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                  </div>
+                                                  <div class="modal-body">
+                                                    <pre style="white-space: pre-wrap;word-break: break-word;"><?php echo nl2br(html_escape($appointment->description)); ?></pre>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if (!empty($appointment->file)): ?>
+                                            <?php if (file_exists($appointment->file)): ?>
+                                                <a href="<?php echo base_url($appointment->file); ?>" target="_blank" class="link">
+                                                    <i class="fas fa-file"></i> View File
+                                                </a>
+                                            <?php else: ?>
+                                                <span class="text-danger link">File not found</span>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <span class="text-muted link">No file</span>
+                                        <?php endif; ?>
+                                    </td>
+
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-tool" data-toggle="dropdown" aria-expanded="false">
                                               <i class="fas fa-ellipsis-h"></i>
