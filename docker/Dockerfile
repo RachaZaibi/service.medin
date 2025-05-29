@@ -17,3 +17,6 @@ RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
 # Use custom Apache config
 COPY apache.conf /etc/apache2/sites-available/000-default.conf
+
+RUN echo "upload_max_filesize=100M" > /usr/local/etc/php/conf.d/99-custom.ini \
+ && echo "post_max_size=100M" >> /usr/local/etc/php/conf.d/99-custom.ini

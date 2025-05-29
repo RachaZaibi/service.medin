@@ -34,7 +34,7 @@
    <div class="row justify-content-center mb-5">
     <div class="col-sm-6 col-lg-4 mb-5 mb-lg-0" data-aos="zoom-in-up" data-aos-delay="150">
         <div class="rtlcard card shadow-hover p-4 p-xl-6 text-center h-100">
-            <a href="https://service.medin.tn/info" target="_blank" class="rtlcbody card-body p-0">
+            <a href="http://localhost:8085/info" target="_blank" class="rtlcbody card-body p-0">
                 <div class="mb-4">
                     <img width="80px" src="<?php echo base_url('assets/images/technical-support.png'); ?>">
                 </div>
@@ -47,7 +47,7 @@
     <div class="col-sm-6 col-lg-4 mb-5 mb-lg-0" data-aos="zoom-in-up" data-aos-delay="150">
         
         <div class="rtlcard card shadow-hover p-4 p-xl-6 text-center h-100">
-            <a href="https://service.medin.tn/tice" target="_blank" class="rtlcbody card-body p-0">
+            <a href="http://localhost:8085/tice" target="_blank" class="rtlcbody card-body p-0">
                 <div class="mb-4">
                     <img width="80px" src="<?php echo base_url('assets/images/video-call1.png'); ?>">
                 </div>
@@ -59,7 +59,7 @@
 
      <div class="col-sm-6 col-lg-4 mb-5 mb-lg-0" data-aos="zoom-in-up" data-aos-delay="150">
         <div class="rtlcard card shadow-hover-1 transition-hover p-4 p-xl-6 text-center h-100 ">
-            <a href="https://service.medin.tn/recherche" target="_blank" class="rtlcbody card-body p-0">
+            <a href="http://localhost:8085/recherche" target="_blank" class="rtlcbody card-body p-0">
                 <div class="mb-4">
                     <img width="80px" src="<?php echo base_url('assets/images/learning.gif') ?>">
                 </div>
@@ -73,7 +73,7 @@
 <div class="row justify-content-center">
     <div class="col-sm-6 col-lg-4 mb-5 mb-lg-0" data-aos="zoom-in-up" data-aos-delay="150">
         <div class="rtlcard card shadow-hover-1 transition-hover p-4 p-xl-6 text-center  h-100">
-            <a href="https://service.medin.tn/pedagogie" target="_blank" class="rtlcbody card-body p-0">
+            <a href="http://localhost:8085/pedagogie" target="_blank" class="rtlcbody card-body p-0">
                 <div class="mb-4">
                     <img width="80px" src="<?php echo base_url('assets/images/teach.gif') ?>">
                 </div>
@@ -85,7 +85,7 @@
 
     <div class="col-sm-6 col-lg-4 mb-5 mb-lg-0" data-aos="zoom-in-up" data-aos-delay="150">
         <div class="rtlcard card shadow-hover-1 transition-hover p-4 p-xl-6 text-center h-100 ">
-            <a href="https://service.medin.tn/explorations" target="_blank" class="rtlcbody card-body p-0">
+            <a href="http://localhost:8085/explorations" target="_blank" class="rtlcbody card-body p-0">
                 <div class="mb-4">
                     <img width="80px" src="<?php echo base_url('assets/images/explore.png') ?>">
                 </div>

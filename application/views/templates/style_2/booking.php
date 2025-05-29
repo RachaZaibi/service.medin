@@ -1,4 +1,3 @@
-
 <?php $total = get_front_total_value($user->id, 'appointments'); ?>
 <?php if (ckeck_front_plan_limit($user->id, 'appointments', $total) == TRUE && $is_embed==false): ?>
 <section class="p-4">
@@ -31,8 +30,7 @@
                 <?php if (isset($page_title) && $page_title == 'Booking'): ?>
                     <?php if($is_embed == true){$action_slug = 'book_embed_appointment';}else{$action_slug = 'book_appointment';} ?>
                     <!-- Form -->
-                    <form id="booking_form" method="post" action="<?php echo base_url('company/'.$action_slug.'/'.$slug); ?>">
-                    
+                    <form id="booking_form" method="post" enctype="multipart/form-data" action="<?php echo base_url('company/'.$action_slug.'/'.$slug); ?>">                
                         <?php if (ckeck_front_plan_limit($user->id, 'appointments', $total) == FALSE): ?>
                             <div class="booking_step_1s text-center">
                                 <p class="pt-4 lead text-muted"><i class="lni lni-ban"></i> <br> <?php echo trans('booking-is-temporary-unavailable') ?></p>
@@ -330,12 +328,15 @@
                             <?php endif; ?>
 
                             <div class="row mt-2">
-
                                     <div class="col-12 mb-4">
-                                        <a href="javascript:;" class="fs-15 mb-2 badge badge-secondary-soft badge-pill note_btn"><?php echo trans('any-special-notes') ?></a>
-                                        <textarea class="form-control mt-2 note_area d-hide" name="note" rows="2" placeholder="<?php echo trans('write-your-notes-here') ?>"></textarea>
-                                    </div>
-                                
+                                        <!-- <a href="javascript:;" class="fs-15 mb-2 badge badge-secondary-soft badge-pill note_btn"><?php echo trans('any-special-notes') ?></a> -->
+                                        <label for="description" class="fs-15 mb-2"><?php echo trans('describe-your-project') ?> <span class="text-danger">*</span></label>
+                                        <textarea id="description" class="form-control mt-2" name="description" rows="3" placeholder="<?php echo trans('write-your-project-description-here') ?>" required></textarea>
+                                       
+                                        <div class="custom-file w-50 m-1">
+                                            <input type="file" class="custom-file-input" name="file" id="file" required>
+                                            <label class="custom-file-label" for="file"><?php echo trans('upload-image') ?></label>
+                                        </div>
                                     <div class="col-12">
                                         <?php if (settings()->enable_captcha == 1 && settings()->captcha_site_key != ''): ?>
                                             <div class="g-recaptcha pull-left" data-sitekey="<?php echo html_escape(settings()->captcha_site_key); ?>"></div>
@@ -539,3 +540,63 @@
         </div>
     </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var bookingForm = document.getElementById('booking_form');
+    if (bookingForm) {
+        bookingForm.addEventListener('submit', function(e) {
+            var fileInput = bookingForm.querySelector('input[type="file"]');
+            if (fileInput) {
+                e.preventDefault();
+                var submitBtn = bookingForm.querySelector('.step3_btn');
+                var originalBtnHtml = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> &nbsp; Processing';
+                document.querySelector('.error').textContent = '';
+                var formData = new FormData(bookingForm);
+                fetch(bookingForm.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.st === 1 && data.url) {
+                        window.location.href = data.url;
+                    } else if (data.error) {
+                        document.querySelector('.error').textContent = data.error;
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnHtml;
+                    } else if (data.msg) {
+                        document.querySelector('.error').textContent = data.msg;
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnHtml;
+                    } else {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnHtml;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.querySelector('.error').textContent = 'An error occurred while submitting the form.';
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnHtml;
+                });
+            }
+        });
+    }
+});
+</script><script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var inputs = document.querySelectorAll('.custom-file-input');
+    Array.prototype.forEach.call(inputs, function (input) {
+      input.addEventListener('change', function (e) {
+        var fileName = e.target.files[0]?.name;
+        if (fileName) {
+          var label = e.target.nextElementSibling;
+          label.innerText = fileName;
+        }
+      });
+    });
+  });
+</script>

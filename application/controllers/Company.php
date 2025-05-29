@@ -811,6 +811,13 @@ class Company extends Home_Controller {
     //book embedded appointment
     public function book_appointment($slug="")
     {   
+        // Only accept multipart/form-data requests
+        $contentType = isset($_SERVER['CONTENT_TYPE']) ? $_SERVER['CONTENT_TYPE'] : (isset($_SERVER['HTTP_CONTENT_TYPE']) ? $_SERVER['HTTP_CONTENT_TYPE'] : '');
+        if (stripos($contentType, 'multipart/form-data') === false) {
+            // echo json_encode(['st' => 0, 'msg' => 'Invalid request: This endpoint only accepts multipart/form-data requests.']);
+            exit();
+        }
+
         $data = array();
         if (empty($slug)) {
             $slug = $this->check_domain();
@@ -853,7 +860,7 @@ class Company extends Home_Controller {
 
                     if ($this->form_validation->run() === false) {
                         $error = strip_tags(validation_errors());
-                        echo json_encode(array('st'=>3,'error'=> $error));
+                        // echo json_encode(array('st'=>3,'error'=> $error));
                         exit();
                     }
                     
@@ -927,6 +934,33 @@ class Company extends Home_Controller {
                     $customer_id = $this->admin_model->insert($newuser_data, 'customers');
                 }
 
+                // Process optional appointment file upload
+                $uploaded_file_path = '';
+                if (!empty($_FILES['file']['name'])) {
+                    $config['upload_path'] = './uploads/files/';
+                    $config['allowed_types'] = '*';
+                    $config['max_size'] = 2048;
+                    $config['file_name'] = uniqid('file_');
+
+                    $CI =& get_instance();
+                    $CI->load->library('upload', $config);
+
+                    if (!is_dir($config['upload_path'])) {
+                        mkdir($config['upload_path'], 0777, true); // Create folder if it doesn't exist
+                    }
+
+                    if (!$CI->upload->do_upload('file')) {
+                        $error_message = strip_tags($CI->upload->display_errors());
+                        // Optionally, customize the message for file size
+                        if (strpos($error_message, 'exceeds the maximum allowed size') !== false) {
+                            $error_message = 'File upload error: The file is too large. Maximum allowed size is 2MB.';
+                        }
+                        echo json_encode(['st' => 0, 'msg' => $error_message]);
+                        exit();
+                    } else {
+                        $uploaded_file_path = 'uploads/files/' . $CI->upload->data('file_name');
+                    }
+                }
 
                 if ($this->input->post('staff_id') == 0) {
                     //$random_staff = $this->common_model->get_random_staffs($company->uid, $this->input->post('service_id'), 'services');
@@ -964,6 +998,8 @@ class Company extends Home_Controller {
                     'customer_id' => $customer_id,
                     'service_id' => $this->input->post('service_id', true),
                     'note' => $this->input->post('note'),
+                    'description' => $this->input->post('description', true),
+                    'file' => $uploaded_file_path, // File path is now always correct
                     'location_id' => $location_id,
                     'sub_location_id' => $sub_location_id,
                     'group_booking' => $group_booking,
@@ -976,6 +1012,28 @@ class Company extends Home_Controller {
                     'created_at' => user_date_now($company->time_zone)
                 );
                 
+                // Prevent duplicate appointments: check before insert
+                $this->db->where([
+                    'customer_id' => $booking_data['customer_id'],
+                    'service_id' => $booking_data['service_id'],
+                    'date' => $booking_data['date'],
+                    'time' => $booking_data['time'],
+                    'business_id' => $booking_data['business_id'],
+                ]);
+                $existing = $this->db->get('appointments')->row();
+
+                if ($existing) {
+                    // Update the file path if a new file is uploaded
+                    if ($uploaded_file_path != '') {
+                        $this->admin_model->edit_option(['file' => $uploaded_file_path], $existing->id, 'appointments');
+                    }
+                    $appointment_id = $existing->id;
+                } else {
+                    // Insert new appointment
+                    $appointment_id = $this->admin_model->insert($booking_data, 'appointments');
+                }
+                
+
                 // send sms to customer
                 if ($user->enable_sms_notify == 1) {
                     $this->load->model('sms_model');
@@ -1060,7 +1118,27 @@ class Company extends Home_Controller {
                             $data = $this->security->xss_clean($data);
                             $this->session->set_userdata($data);
                         
-                            $appointment_id = $this->admin_model->insert($booking_data, 'appointments');
+                            // Prevent duplicate appointments: check before insert
+                $this->db->where([
+                    'customer_id' => $booking_data['customer_id'],
+                    'service_id' => $booking_data['service_id'],
+                    'date' => $booking_data['date'],
+                    'time' => $booking_data['time'],
+                    'business_id' => $booking_data['business_id'],
+                ]);
+                $existing = $this->db->get('appointments')->row();
+
+                if ($existing) {
+                    // Update the file path if a new file is uploaded
+                    if ($uploaded_file_path != '') {
+                        $this->admin_model->edit_option(['file' => $uploaded_file_path], $existing->id, 'appointments');
+                    }
+                    $appointment_id = $existing->id;
+                } else {
+                    // Insert new appointment
+                    $appointment_id = $this->admin_model->insert($booking_data, 'appointments');
+                }
+                            
                             $url = base_url('confirm_booking/'.$slug.'/'.md5($appointment_id));
                             $msg = trans('appointment-booked-successfully');
 
@@ -1081,7 +1159,27 @@ class Company extends Home_Controller {
                         );
                         $this->session->set_userdata($ses_data);
 
-                        $appointment_id = $this->admin_model->insert($booking_data, 'appointments');
+                        // Prevent duplicate appointments: check before insert
+                $this->db->where([
+                    'customer_id' => $booking_data['customer_id'],
+                    'service_id' => $booking_data['service_id'],
+                    'date' => $booking_data['date'],
+                    'time' => $booking_data['time'],
+                    'business_id' => $booking_data['business_id'],
+                ]);
+                $existing = $this->db->get('appointments')->row();
+
+                if ($existing) {
+                    // Update the file path if a new file is uploaded
+                    if ($uploaded_file_path != '') {
+                        $this->admin_model->edit_option(['file' => $uploaded_file_path], $existing->id, 'appointments');
+                    }
+                    $appointment_id = $existing->id;
+                } else {
+                    // Insert new appointment
+                    $appointment_id = $this->admin_model->insert($booking_data, 'appointments');
+                }
+
                         $url = base_url('confirm_booking/'.$slug.'/'.md5($appointment_id));
                         $msg = trans('appointment-booked-successfully');
                         echo json_encode(array('st'=>1,'url'=> $url, 'msg' => $msg));
@@ -1089,7 +1187,27 @@ class Company extends Home_Controller {
 
                 }else {
 
+                    // Prevent duplicate appointments: check before insert
+                $this->db->where([
+                    'customer_id' => $booking_data['customer_id'],
+                    'service_id' => $booking_data['service_id'],
+                    'date' => $booking_data['date'],
+                    'time' => $booking_data['time'],
+                    'business_id' => $booking_data['business_id'],
+                ]);
+                $existing = $this->db->get('appointments')->row();
+
+                if ($existing) {
+                    // Update the file path if a new file is uploaded
+                    if ($uploaded_file_path != '') {
+                        $this->admin_model->edit_option(['file' => $uploaded_file_path], $existing->id, 'appointments');
+                    }
+                    $appointment_id = $existing->id;
+                } else {
+                    // Insert new appointment
                     $appointment_id = $this->admin_model->insert($booking_data, 'appointments');
+                }
+
                     $register = $this->common_model->get_by_id($customer_id, 'customers');
                     $data = array(
                         'id' => $register->id,
@@ -1105,7 +1223,9 @@ class Company extends Home_Controller {
 
                     $msg = trans('appointment-booked-successfully');
                     $url = base_url('confirm_booking/'.$slug.'/'.md5($appointment_id));
-                    echo json_encode(array('st'=>1, 'msg' => $msg, 'url'=> $url));
+                    $msg = trans('appointment-booked-successfully');
+                    echo json_encode(array('st'=>1,'url'=> $url, 'msg' => $msg));
+                    exit();
                 }
                 
 
@@ -1318,7 +1438,9 @@ class Company extends Home_Controller {
                             $data = $this->security->xss_clean($data);
                             $this->session->set_userdata($data);
                         
+                            // Insert new appointment
                             $appointment_id = $this->admin_model->insert($booking_data, 'appointments');
+
                             $url = base_url('company/confirm_booking/'.$slug.'/'.md5($appointment_id).'?embed=true');
                             $msg = trans('appointment-booked-successfully');
 
@@ -1339,7 +1461,9 @@ class Company extends Home_Controller {
                         );
                         $this->session->set_userdata($ses_data);
 
+                        // Insert new appointment
                         $appointment_id = $this->admin_model->insert($booking_data, 'appointments');
+
                         $url = base_url('company/confirm_booking/'.$slug.'/'.md5($appointment_id).'?embed=true');
                         $msg = trans('appointment-booked-successfully');
                         echo json_encode(array('st'=>1,'url'=> $url, 'msg' => $msg));
@@ -1347,7 +1471,9 @@ class Company extends Home_Controller {
 
                 }else {
 
+                    // Insert new appointment
                     $appointment_id = $this->admin_model->insert($booking_data, 'appointments');
+
                     $register = $this->common_model->get_by_id($customer_id, 'customers');
                     $data = array(
                         'id' => $register->id,
@@ -1360,15 +1486,13 @@ class Company extends Home_Controller {
                     );
                     $data = $this->security->xss_clean($data);
                     $this->session->set_userdata($data);
-
+                    $url = base_url('confirm_booking/'.$slug.'/'.md5($appointment_id).'?embed=true');
                     $msg = trans('appointment-booked-successfully');
-                    $url = base_url('company/confirm_booking/'.$slug.'/'.md5($appointment_id).'?embed=true');
-                    echo json_encode(array('st'=>1, 'msg' => $msg, 'url'=> $url));
+                    echo json_encode(array('st'=>1,'url'=> $url, 'msg' => $msg));
+                    exit();
                 }
 
-            
+            }
         }
     }
-
-}
 
