@@ -119,6 +119,8 @@ $route['gc/auth/login'] = 'googlecalendar/login';
 $route['gc/auth/oauth'] = 'googlecalendar/oauth';
 
 //user route
+
+$route['migrations'] = 'Migrate/index';
 $route['(:any)'] = 'company/home/$1';
 $route['pages/(:any)/(:any)'] = 'company/page/$1/$2';
 $route['staffs/(:any)'] = 'company/staff/$1';
@@ -128,6 +130,5 @@ $route['booking/(:any)'] = 'company/booking/$1';
 $route['confirm_booking/(:any)/(:any)'] = 'company/confirm_booking/$1/$2';
 $route['service/(:any)/(:any)'] = 'company/service/$1/$2';
 $route['change_password'] = 'admin/dashboard/change_password';
-$route['migrate'] = 'Migrate/index';
 $route['run-sql/add-translations'] = 'RunSql/add_translations';
 
