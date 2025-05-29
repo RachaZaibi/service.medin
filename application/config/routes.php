@@ -128,8 +128,6 @@ $route['booking/(:any)'] = 'company/booking/$1';
 $route['confirm_booking/(:any)/(:any)'] = 'company/confirm_booking/$1/$2';
 $route['service/(:any)/(:any)'] = 'company/service/$1/$2';
 $route['change_password'] = 'admin/dashboard/change_password';
-$route['migrate'] = 'migrate/index';
-$route['upload'] = 'upload/index';
-$route['upload/test_upload'] = 'upload/test_upload';
+$route['migrate'] = 'Migrate/index';
 $route['run-sql/add-translations'] = 'RunSql/add_translations';
 
